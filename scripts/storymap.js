@@ -145,6 +145,8 @@ $(window).on('load', function() {
     var currentlyInFocus; // integer to specify each chapter is currently in focus
     var overlay;  // URL of the overlay for in-focus chapter
     var geoJsonOverlay;
+    var ibxOverlayGroup = null;
+    var studyAreaGroup = null;
 
     for (i in chapters) {
       var c = chapters[i];
@@ -157,12 +159,12 @@ $(window).on('load', function() {
 
         markers.push(
           L.circleMarker([lat, lon], {
-            radius: 8,
+            radius: 15,
             color: '#542B3A',
-            weight: 2,
-            opacity: c['Marker'] === 'Hidden' ? 0 : 0.9,
+            weight: 2.5,
+            opacity: c['Marker'] === 'Hidden' ? 0 : 0.95,
             fillColor: '#A65D69',
-            fillOpacity: c['Marker'] === 'Hidden' ? 0 : 0.48,
+            fillOpacity: c['Marker'] === 'Hidden' ? 0 : 0.62,
             interactive: c['Marker'] === 'Hidden' ? false : true,
           })
         );
@@ -315,6 +317,8 @@ $(window).on('load', function() {
           if (geoJsonOverlay && map.hasLayer(geoJsonOverlay)) {
             map.removeLayer(geoJsonOverlay);
           }
+          if (ibxOverlayGroup && map.hasLayer(ibxOverlayGroup)) map.removeLayer(ibxOverlayGroup);
+          if (studyAreaGroup && map.hasLayer(studyAreaGroup)) map.removeLayer(studyAreaGroup);
 
           var c = chapters[i];
 
@@ -389,13 +393,59 @@ $(window).on('load', function() {
             });
           }
 
+          // Chapter 1: full proposed IBX corridor and all station locations.
+          if (i == 0) {
+            var ibxBase = 'https://services6.arcgis.com/OO2s4OoyCZkYJ6oE/ArcGIS/rest/services/IBX_stations_and_project_corridor/FeatureServer/';
+            var stationsUrl = ibxBase + '0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson';
+            var corridorUrl = ibxBase + '1/query?where=1%3D1&outFields=*&outSR=4326&f=geojson';
+            ibxOverlayGroup = L.layerGroup().addTo(map);
+            $.when($.getJSON(corridorUrl), $.getJSON(stationsUrl)).done(function(corridorResponse, stationResponse) {
+              var corridorLayer = L.geoJSON(corridorResponse[0], {
+                style: function() { return { color: '#A65D69', weight: 5, opacity: 0.92, lineCap: 'round', lineJoin: 'round' }; }
+              }).addTo(ibxOverlayGroup);
+              L.geoJSON(stationResponse[0], {
+                pointToLayer: function(feature, latlng) {
+                  return L.circleMarker(latlng, { radius: 11, color: '#542B3A', weight: 2.5, opacity: 1, fillColor: '#A65D69', fillOpacity: 0.86 });
+                },
+                onEachFeature: function(feature, layer) {
+                  var props = feature.properties || {};
+                  var label = props.name || props.NAME || props.station || props.Station || props.STATION_NAME;
+                  if (!label) Object.keys(props).some(function(key) {
+                    if (/station|name/i.test(key) && props[key]) { label = props[key]; return true; }
+                    return false;
+                  });
+                  if (label) layer.bindTooltip(label, { direction: 'top', offset: [0, -8] });
+                }
+              }).addTo(ibxOverlayGroup);
+              if (corridorLayer.getBounds().isValid()) map.fitBounds(corridorLayer.getBounds().pad(0.08));
+            }).fail(function() { console.warn('The public IBX station/corridor layer could not be loaded.'); });
+          }
+
+          // Chapter 3: broad study-area circle that includes BAT and NYU Langone.
+          if (i == 2) {
+            studyAreaGroup = L.layerGroup().addTo(map);
+            L.circle([40.6448, -74.0260], {
+              radius: 900, color: '#542B3A', weight: 3, opacity: 0.92,
+              fillColor: '#B27668', fillOpacity: 0.17
+            }).addTo(studyAreaGroup);
+            L.circleMarker([40.643526, -74.025924], {
+              radius: 14, color: '#542B3A', weight: 2.5, fillColor: '#A65D69', fillOpacity: 0.92
+            }).bindTooltip('Brooklyn Army Terminal', { direction: 'top' }).addTo(studyAreaGroup);
+            L.circleMarker([40.646583, -74.025496], {
+              radius: 14, color: '#542B3A', weight: 2.5, fillColor: '#B27668', fillOpacity: 0.96
+            }).bindTooltip('NYU Langone Hospital—Brooklyn', { direction: 'top' }).addTo(studyAreaGroup);
+          }
+
           // Fly to the new marker destination if latitude and longitude exist
-          if (c['Latitude'] && c['Longitude']) {
+          if (i == 0) {
+            map.setView([40.70, -73.91], 10);
+          } else if (i == 1) {
+            map.flyTo([40.643526, -74.025924], 15, { animate: true, duration: 2 });
+          } else if (i == 2) {
+            map.flyTo([40.6448, -74.0260], 14, { animate: true, duration: 2 });
+          } else if (c['Latitude'] && c['Longitude']) {
             var zoom = c['Zoom'] ? c['Zoom'] : CHAPTER_ZOOM;
-            map.flyTo([c['Latitude'], c['Longitude']], zoom, {
-              animate: true,
-              duration: 2, // default is 2 seconds
-            });
+            map.flyTo([c['Latitude'], c['Longitude']], zoom, { animate: true, duration: 2 });
           }
 
           // No need to iterate through the following chapters
