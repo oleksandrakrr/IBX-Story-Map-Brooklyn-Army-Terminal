@@ -502,7 +502,8 @@ $(window).on('load', function() {
         bounds.push(markers[i].getLatLng());
       }
     }
-    map.fitBounds(bounds);
+    // Keep the opening view on the full IBX corridor; chapter overlays set later views.
+    map.setView([40.70, -73.91], 10);
 
     $('#map, #narration, #title').css('visibility', 'visible');
     $('div.loader').css('visibility', 'hidden');
