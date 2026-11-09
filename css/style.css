@@ -98,8 +98,23 @@ body {
 .chapter-header {
   display: block;
   text-align: center;
-  font-size: 1.2em;
-  padding: 0 5px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.75em;
+  font-weight: normal;
+  line-height: 1.25;
+  color: #542B3A;
+  margin: 0 20px 22px;
+  padding: 0 12px 14px;
+}
+
+.chapter-header::after {
+  content: "";
+  display: block;
+  width: 46px;
+  height: 3px;
+  margin: 14px auto 0;
+  background-color: #B27668;
+  border-radius: 2px;
 }
 
 .source {
