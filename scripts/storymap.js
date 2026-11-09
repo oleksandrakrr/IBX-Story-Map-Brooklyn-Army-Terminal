@@ -156,20 +156,16 @@ $(window).on('load', function() {
         chapterCount += 1;
 
         markers.push(
-          L.marker([lat, lon], {
-            icon: L.ExtraMarkers.icon({
-              icon: 'fa-number',
-              number: c['Marker'] === 'Numbered'
-                ? chapterCount
-                : (c['Marker'] === 'Plain'
-                  ? ''
-                  : c['Marker']), 
-              markerColor: c['Marker Color'] || 'blue'
-            }),
+          L.circleMarker([lat, lon], {
+            radius: 8,
+            color: '#542B3A',
+            weight: 2,
             opacity: c['Marker'] === 'Hidden' ? 0 : 0.9,
+            fillColor: '#A65D69',
+            fillOpacity: c['Marker'] === 'Hidden' ? 0 : 0.48,
             interactive: c['Marker'] === 'Hidden' ? false : true,
-          }
-        ));
+          })
+        );
 
       } else {
         markers.push(null);
@@ -367,11 +363,26 @@ $(window).on('load', function() {
               geoJsonOverlay = L.geoJson(geojson, {
                 style: function(feature) {
                   return {
-                    fillColor: feature.properties.fillColor || props.fillColor || '#ffffff',
-                    weight: feature.properties.weight || props.weight || 1,
-                    opacity: feature.properties.opacity || props.opacity || 0.5,
-                    color: feature.properties.color || props.color || '#cccccc',
-                    fillOpacity: feature.properties.fillOpacity || props.fillOpacity || 0.5,
+                    fillColor: feature.properties.fillColor || props.fillColor || '#F7F0EB',
+                    weight: feature.properties.weight || props.weight || 2,
+                    opacity: feature.properties.opacity || props.opacity || 0.75,
+                    color: feature.properties.color || props.color || '#542B3A',
+                    fillOpacity: feature.properties.fillOpacity || props.fillOpacity || 0.18,
+                  }
+                },
+                pointToLayer: function(feature, latlng) {
+                  return L.circleMarker(latlng, {
+                    radius: feature.properties.radius || 7,
+                    color: feature.properties.color || '#542B3A',
+                    weight: feature.properties.weight || 2,
+                    opacity: feature.properties.opacity || 0.9,
+                    fillColor: feature.properties.fillColor || '#A65D69',
+                    fillOpacity: feature.properties.fillOpacity || 0.5
+                  });
+                },
+                onEachFeature: function(feature, layer) {
+                  if (feature.properties && feature.properties.name) {
+                    layer.bindTooltip(feature.properties.name, { direction: 'top', offset: [0, -6] });
                   }
                 }
               }).addTo(map);
