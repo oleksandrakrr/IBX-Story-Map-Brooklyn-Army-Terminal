@@ -160,10 +160,10 @@ $(window).on('load', function() {
         markers.push(
           L.circleMarker([lat, lon], {
             radius: 15,
-            color: '#542B3A',
+            color: '#405B66',
             weight: 2.5,
             opacity: c['Marker'] === 'Hidden' ? 0 : 0.95,
-            fillColor: '#A65D69',
+            fillColor: '#78939A',
             fillOpacity: c['Marker'] === 'Hidden' ? 0 : 0.62,
             interactive: c['Marker'] === 'Hidden' ? false : true,
           })
@@ -425,14 +425,14 @@ $(window).on('load', function() {
           if (i == 2) {
             studyAreaGroup = L.layerGroup().addTo(map);
             L.circle([40.6448, -74.0260], {
-              radius: 900, color: '#542B3A', weight: 3, opacity: 0.92,
-              fillColor: '#B27668', fillOpacity: 0.17
+              radius: 900, color: '#58747A', weight: 3, opacity: 0.92,
+              fillColor: '#9CB5AD', fillOpacity: 0.20
             }).addTo(studyAreaGroup);
             L.circleMarker([40.643526, -74.025924], {
-              radius: 14, color: '#542B3A', weight: 2.5, fillColor: '#A65D69', fillOpacity: 0.92
+              radius: 14, color: '#405B66', weight: 2.5, fillColor: '#668B91', fillOpacity: 0.96
             }).bindTooltip('Brooklyn Army Terminal', { direction: 'top' }).addTo(studyAreaGroup);
             L.circleMarker([40.646583, -74.025496], {
-              radius: 14, color: '#542B3A', weight: 2.5, fillColor: '#B27668', fillOpacity: 0.96
+              radius: 14, color: '#805E3F', weight: 2.5, fillColor: '#D0A36D', fillOpacity: 0.98
             }).bindTooltip('NYU Langone Hospital—Brooklyn', { direction: 'top' }).addTo(studyAreaGroup);
           }
 
