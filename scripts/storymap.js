@@ -125,6 +125,25 @@ $(window).on('load', function() {
 
     var markers = [];
 
+    // Classic teardrop pins for individual destinations; IBX stations remain circles.
+    function destinationPin(fillColor, strokeColor) {
+      var pinSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="34" height="44" viewBox="0 0 34 44">' +
+        '<path d="M17 1.8C8.7 1.8 2 8.4 2 16.5c0 10.2 15 25.4 15 25.4s15-15.2 15-25.4C32 8.4 25.3 1.8 17 1.8Z" fill="' + fillColor + '" stroke="' + strokeColor + '" stroke-width="2"/>' +
+        '<circle cx="17" cy="16.5" r="5.1" fill="#F7F0EB" stroke="' + strokeColor + '" stroke-width="1.2"/>' +
+        '</svg>';
+      return L.divIcon({
+        className: 'destination-pin-icon',
+        html: pinSvg,
+        iconSize: [34, 44],
+        iconAnchor: [17, 42],
+        tooltipAnchor: [0, -36]
+      });
+    }
+
+    var generalDestinationPin = destinationPin('#78939A', '#405B66');
+    var batDestinationPin = destinationPin('#668B91', '#405B66');
+    var hospitalDestinationPin = destinationPin('#D0A36D', '#805E3F');
+
     var markActiveColor = function(k) {
       /* Removes marker-active class from all markers */
       for (var i = 0; i < markers.length; i++) {
@@ -158,14 +177,11 @@ $(window).on('load', function() {
         chapterCount += 1;
 
         markers.push(
-          L.circleMarker([lat, lon], {
-            radius: 15,
-            color: '#405B66',
-            weight: 2.5,
-            opacity: c['Marker'] === 'Hidden' ? 0 : 0.95,
-            fillColor: '#78939A',
-            fillOpacity: c['Marker'] === 'Hidden' ? 0 : 0.62,
+          L.marker([lat, lon], {
+            icon: generalDestinationPin,
+            opacity: c['Marker'] === 'Hidden' ? 0 : 1,
             interactive: c['Marker'] === 'Hidden' ? false : true,
+            keyboard: c['Marker'] === 'Hidden' ? false : true
           })
         );
 
@@ -428,11 +444,11 @@ $(window).on('load', function() {
               radius: 900, color: '#58747A', weight: 3, opacity: 0.92,
               fillColor: '#9CB5AD', fillOpacity: 0.20
             }).addTo(studyAreaGroup);
-            L.circleMarker([40.643526, -74.025924], {
-              radius: 14, color: '#405B66', weight: 2.5, fillColor: '#668B91', fillOpacity: 0.96
+            L.marker([40.643526, -74.025924], {
+              icon: batDestinationPin
             }).bindTooltip('Brooklyn Army Terminal', { direction: 'top' }).addTo(studyAreaGroup);
-            L.circleMarker([40.646583, -74.025496], {
-              radius: 14, color: '#805E3F', weight: 2.5, fillColor: '#D0A36D', fillOpacity: 0.98
+            L.marker([40.646583, -74.025496], {
+              icon: hospitalDestinationPin
             }).bindTooltip('NYU Langone Hospital—Brooklyn', { direction: 'top' }).addTo(studyAreaGroup);
           }
 
