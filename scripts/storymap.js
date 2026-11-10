@@ -447,7 +447,7 @@ $(window).on('load', function() {
           if (i == 2) {
             studyAreaGroup = L.layerGroup().addTo(map);
             L.circle([40.6448, -74.0260], {
-              radius: 900, color: '#58747A', weight: 3, opacity: 0.92,
+              radius: 1000, color: '#58747A', weight: 3, opacity: 0.92,
               fillColor: '#9CB5AD', fillOpacity: 0.20
             }).addTo(studyAreaGroup);
             L.marker([40.643526, -74.025924], {
