@@ -224,3 +224,49 @@ h2 {
 .description p:nth-of-type(3) {
   font-size: 20px !important;
 }
+
+/* Consistent Georgia typography and clean chapter hierarchy */
+body, #header, #contents, .chapter-container, .description,
+.description p, .description li, .description div, .description span,
+.description strong, .description b, .description em {
+  font-family: Georgia, "Times New Roman", serif !important;
+}
+.chapter-header {
+  font-family: Georgia, "Times New Roman", serif !important;
+  font-size: 1.8rem !important;
+  font-weight: normal !important;
+  color: #542B3A !important;
+  letter-spacing: 0.01em;
+}
+.description {
+  color: #4F4548 !important;
+  font-size: 16px !important;
+  line-height: 1.75 !important;
+  padding: 18px 22px 24px;
+}
+.description p {
+  font-size: 16px !important;
+  line-height: 1.75 !important;
+  margin: 0 0 1.1em !important;
+  color: #4F4548 !important;
+}
+.description b, .description strong { color: #542B3A !important; }
+.description .research-question {
+  background: #F7F0EB;
+  border-left: 4px solid #B27668;
+  padding: 15px 18px;
+  margin: 22px 0;
+}
+.description .research-question .section-heading {
+  font-size: 19px !important;
+  color: #542B3A !important;
+  margin-bottom: 8px !important;
+}
+.description .research-question p:last-child { margin-bottom: 0 !important; }
+.description .context-note {
+  color: #66545A !important;
+  font-size: 14px !important;
+  border-top: 1px solid #D9C8C1;
+  padding-top: 14px;
+  margin-top: 22px !important;
+}
