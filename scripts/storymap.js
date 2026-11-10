@@ -270,10 +270,10 @@ $(window).on('load', function() {
         }).append(media).after(source);
       }
 
-      // Clean up a malformed opening HTML tag that was pasted into the Chapter 3
-      // Google Sheets description as visible text instead of markup.
+      // Normalize the old malformed Chapter 3 wrapper so it cannot appear as visible text.
       var descriptionHTML = c['Description'] || '';
-      descriptionHTML = descriptionHTML.replace(/\s*div style=["']font-family:\s*Georgia,\s*serif;\s*color:\s*#542B3A;["']>\s*/gi, '');
+      descriptionHTML = descriptionHTML.replace(/^\s*div style=(["'])font-family:\s*Georgia,\s*serif;\s*color:\s*#542B3A;\1>\s*/i, '');
+      descriptionHTML = descriptionHTML.replace(/^\s*<div style=(["'])font-family:\s*Georgia,\s*serif;\s*color:\s*#542B3A;\1>\s*/i, '');
       descriptionHTML = descriptionHTML.replace(/\s*<\/div>\s*$/i, '');
 
       container
