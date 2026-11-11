@@ -203,6 +203,13 @@ $(window).on('load', function() {
         var lat = parseFloat(c['Latitude']);
         var lon = parseFloat(c['Longitude']);
 
+        // Chapter 6 local-businesses anchor: approximate center of 2nd Ave
+        // and 50th Street, requested to better represent the business corridor.
+        if ((c['Chapter'] || '').toLowerCase().indexOf('local businesses') !== -1) {
+          lat = 40.6443;
+          lon = -74.0215;
+        }
+
         chapterCount += 1;
 
         var chapterMarker = L.marker([lat, lon], {
