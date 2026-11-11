@@ -143,26 +143,9 @@ $(window).on('load', function() {
     var batDestinationPin = destinationPin('#668B91', '#405B66');
     var hospitalDestinationPin = destinationPin('#D0A36D', '#805E3F');
 
-    // Fixed per-chapter palette. This is assigned in code so the live map
-    // does not depend on whether a spreadsheet color cell has been updated.
-    var chapterPalette = {
-      0: '#607F95', // Chapter 1 — corridor
-      1: '#8A6B7E', // Chapter 2 — IBX overview
-      2: '#668B91', // Chapter 3 — study area
-      3: '#B23A48', // Chapter 4 — field notes
-      4: '#D18B22', // Chapter 5 — healthcare
-      5: '#287A70', // Chapter 6 — community life
-      6: '#8056A8', // Chapter 7 — interviews
-      7: '#3D6FA3', // Chapter 8 — potential impact
-      8: '#668C32'  // Chapter 9 — conclusion
-    };
-
-    function chapterPinColor(value, chapterIndex) {
-      // Prefer the chapter's assigned palette color; spreadsheet values are
-      // retained only as a fallback for chapters added in the future.
-      if (chapterPalette[chapterIndex] && chapterIndex >= 3) {
-        return chapterPalette[chapterIndex];
-      }
+    // Marker Color accepts a custom hex color from the Chapters sheet.
+    // Legacy color names are mapped to the StoryMap palette.
+    function chapterPinColor(value) {
       var color = (value || '').toString().trim();
       if (/^#[0-9a-f]{6}$/i.test(color)) return color;
       var legacyColors = {
@@ -170,7 +153,7 @@ $(window).on('load', function() {
         green: '#668B91', orange: '#B27668', gold: '#D0A36D',
         burgundy: '#542B3A', none: '#668B91'
       };
-      return legacyColors[color.toLowerCase()] || chapterPalette[chapterIndex] || '#668B91';
+      return legacyColors[color.toLowerCase()] || '#668B91';
     }
 
     var markActiveColor = function(k) {
@@ -203,26 +186,16 @@ $(window).on('load', function() {
         var lat = parseFloat(c['Latitude']);
         var lon = parseFloat(c['Longitude']);
 
-        // Chapter 6 local-businesses anchor: approximate center of 2nd Ave
-        // and 50th Street, requested to better represent the business corridor.
-        if ((c['Chapter'] || '').toLowerCase().indexOf('local businesses') !== -1) {
-          lat = 40.6443;
-          lon = -74.0215;
-        }
-
         chapterCount += 1;
 
-        var chapterMarker = L.marker([lat, lon], {
-          icon: destinationPin(chapterPinColor(c['Marker Color'], parseInt(i, 10)), '#542B3A'),
-          opacity: c['Marker'] === 'Hidden' ? 0 : 1,
-          interactive: c['Marker'] === 'Hidden' ? false : true,
-          keyboard: c['Marker'] === 'Hidden' ? false : true
-        });
-        chapterMarker._trueLatLng = L.latLng(lat, lon);
-        chapterMarker.bindTooltip(c['Chapter'] || 'Chapter location', {
-          direction: 'top', offset: [0, -36], opacity: 0.95
-        });
-        markers.push(chapterMarker);
+        markers.push(
+          L.marker([lat, lon], {
+            icon: destinationPin(chapterPinColor(c['Marker Color']), '#542B3A'),
+            opacity: c['Marker'] === 'Hidden' ? 0 : 1,
+            interactive: c['Marker'] === 'Hidden' ? false : true,
+            keyboard: c['Marker'] === 'Hidden' ? false : true
+          })
+        );
 
       } else {
         markers.push(null);
@@ -563,70 +536,8 @@ $(window).on('load', function() {
         bounds.push(markers[i].getLatLng());
       }
     }
-    // Fan out nearby chapter pins at the current zoom level. Their stored
-    // coordinates remain untouched; dashed leader lines point back to each
-    // true location so close pins remain identifiable without falsifying geography.
-    function spreadNearbyMarkers() {
-      var candidates = markers.filter(function(marker) {
-        return marker && marker._trueLatLng && marker.options.interactive !== false;
-      });
-      candidates.forEach(function(marker) {
-        marker.setLatLng(marker._trueLatLng);
-        if (marker._spreadLine && map.hasLayer(marker._spreadLine)) map.removeLayer(marker._spreadLine);
-        marker._spreadLine = null;
-      });
-
-      var zoom = map.getZoom();
-      var projected = candidates.map(function(marker) {
-        return { marker: marker, point: map.project(marker._trueLatLng, zoom) };
-      });
-      var remaining = projected.slice();
-      var threshold = 54;
-
-      while (remaining.length) {
-        var group = [remaining.shift()];
-        var changed = true;
-        while (changed) {
-          changed = false;
-          for (var a = remaining.length - 1; a >= 0; a--) {
-            var close = group.some(function(member) {
-              var dx = member.point.x - remaining[a].point.x;
-              var dy = member.point.y - remaining[a].point.y;
-              return Math.sqrt(dx * dx + dy * dy) < threshold;
-            });
-            if (close) {
-              group.push(remaining.splice(a, 1)[0]);
-              changed = true;
-            }
-          }
-        }
-
-        if (group.length > 1) {
-          var center = group.reduce(function(sum, item) {
-            return { x: sum.x + item.point.x / group.length, y: sum.y + item.point.y / group.length };
-          }, { x: 0, y: 0 });
-          var radius = Math.min(62, 34 + group.length * 3);
-          group.forEach(function(item, index) {
-            var angle = -Math.PI / 2 + (2 * Math.PI * index / group.length);
-            var displayPoint = L.point(
-              center.x + Math.cos(angle) * radius,
-              center.y + Math.sin(angle) * radius
-            );
-            var displayLatLng = map.unproject(displayPoint, zoom);
-            item.marker.setLatLng(displayLatLng);
-            item.marker._spreadLine = L.polyline([item.marker._trueLatLng, displayLatLng], {
-              color: '#8A7479', weight: 1.2, opacity: 0.62,
-              dashArray: '3, 4', interactive: false
-            }).addTo(map);
-          });
-        }
-      }
-    }
-
-    map.on('zoomend', spreadNearbyMarkers);
     // Keep the opening view on the full IBX corridor; chapter overlays set later views.
     map.setView([40.70, -73.91], 10);
-    spreadNearbyMarkers();
 
     $('#map, #narration, #title').css('visibility', 'visible');
     $('div.loader').css('visibility', 'hidden');
