@@ -1,0 +1,26 @@
+{
+  "type": "FeatureCollection",
+  "name": "Chapter 8 — Proposed IBX Brooklyn Army Terminal entrance",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Proposed IBX entrance — near 2nd Avenue and 61st Street (approximate; subject to change)",
+        "kind": "proposed transit station entrance",
+        "color": "#542B3A",
+        "fillColor": "#A65D69",
+        "radius": 11,
+        "weight": 3,
+        "fillOpacity": 0.95,
+        "source": "MTA IBX interactive map; approximate intersection coordinate"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -74.0234,
+          40.6429
+        ]
+      }
+    }
+  ]
+}
