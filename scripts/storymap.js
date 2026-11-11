@@ -143,9 +143,26 @@ $(window).on('load', function() {
     var batDestinationPin = destinationPin('#668B91', '#405B66');
     var hospitalDestinationPin = destinationPin('#D0A36D', '#805E3F');
 
-    // Marker Color accepts a custom hex color from the Chapters sheet.
-    // Legacy color names are mapped to the StoryMap palette.
-    function chapterPinColor(value) {
+    // Fixed per-chapter palette. This is assigned in code so the live map
+    // does not depend on whether a spreadsheet color cell has been updated.
+    var chapterPalette = {
+      0: '#607F95', // Chapter 1 — corridor
+      1: '#8A6B7E', // Chapter 2 — IBX overview
+      2: '#668B91', // Chapter 3 — study area
+      3: '#B23A48', // Chapter 4 — field notes
+      4: '#D18B22', // Chapter 5 — healthcare
+      5: '#287A70', // Chapter 6 — community life
+      6: '#8056A8', // Chapter 7 — interviews
+      7: '#3D6FA3', // Chapter 8 — potential impact
+      8: '#668C32'  // Chapter 9 — conclusion
+    };
+
+    function chapterPinColor(value, chapterIndex) {
+      // Prefer the chapter's assigned palette color; spreadsheet values are
+      // retained only as a fallback for chapters added in the future.
+      if (chapterPalette[chapterIndex] && chapterIndex >= 3) {
+        return chapterPalette[chapterIndex];
+      }
       var color = (value || '').toString().trim();
       if (/^#[0-9a-f]{6}$/i.test(color)) return color;
       var legacyColors = {
@@ -153,7 +170,7 @@ $(window).on('load', function() {
         green: '#668B91', orange: '#B27668', gold: '#D0A36D',
         burgundy: '#542B3A', none: '#668B91'
       };
-      return legacyColors[color.toLowerCase()] || '#668B91';
+      return legacyColors[color.toLowerCase()] || chapterPalette[chapterIndex] || '#668B91';
     }
 
     var markActiveColor = function(k) {
@@ -189,7 +206,7 @@ $(window).on('load', function() {
         chapterCount += 1;
 
         var chapterMarker = L.marker([lat, lon], {
-          icon: destinationPin(chapterPinColor(c['Marker Color']), '#542B3A'),
+          icon: destinationPin(chapterPinColor(c['Marker Color'], parseInt(i, 10)), '#542B3A'),
           opacity: c['Marker'] === 'Hidden' ? 0 : 1,
           interactive: c['Marker'] === 'Hidden' ? false : true,
           keyboard: c['Marker'] === 'Hidden' ? false : true
