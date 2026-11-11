@@ -1,0 +1,63 @@
+{
+  "type": "FeatureCollection",
+  "name": "Chapter 5 — Healthcare destinations",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "NYU Langone Hospital—Brooklyn",
+        "kind": "hospital",
+        "color": "#805E3F",
+        "fillColor": "#D0A36D",
+        "radius": 9,
+        "weight": 2,
+        "fillOpacity": 0.9
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -74.02112,
+          40.64668
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lutheran Augustana Center",
+        "kind": "rehabilitation / long-term care",
+        "color": "#542B3A",
+        "fillColor": "#A65D69",
+        "radius": 8,
+        "weight": 2,
+        "fillOpacity": 0.9
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -74.019654,
+          40.646731
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Sunset Park Family Health Center at NYU Langone",
+        "kind": "community health clinic",
+        "color": "#405B66",
+        "fillColor": "#668B91",
+        "radius": 8,
+        "weight": 2,
+        "fillOpacity": 0.9
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -74.021,
+          40.64563
+        ]
+      }
+    }
+  ]
+}
