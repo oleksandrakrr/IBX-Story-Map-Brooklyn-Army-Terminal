@@ -5,38 +5,20 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "NYU Langone Hospital—Brooklyn",
-        "kind": "hospital",
-        "color": "#805E3F",
-        "fillColor": "#D0A36D",
-        "radius": 9,
-        "weight": 2,
-        "fillOpacity": 0.9
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -74.02112,
-          40.64668
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "name": "Lutheran Augustana Center",
-        "kind": "rehabilitation / long-term care",
+        "name": "Lutheran Augustana Center for Extended Care and Rehabilitation",
+        "kind": "long-term care / rehabilitation",
         "color": "#542B3A",
         "fillColor": "#A65D69",
-        "radius": 8,
+        "radius": 9,
         "weight": 2,
-        "fillOpacity": 0.9
+        "fillOpacity": 0.92,
+        "source": "5434 2nd Avenue; NYS provider records"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -74.019654,
-          40.646731
+          -74.0195922854,
+          40.6466178894
         ]
       }
     },
@@ -44,18 +26,19 @@
       "type": "Feature",
       "properties": {
         "name": "Sunset Park Family Health Center at NYU Langone",
-        "kind": "community health clinic",
+        "kind": "community health center",
         "color": "#405B66",
         "fillColor": "#668B91",
-        "radius": 8,
+        "radius": 9,
         "weight": 2,
-        "fillOpacity": 0.9
+        "fillOpacity": 0.92,
+        "source": "5610 2nd Avenue; NYU Langone official location page"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -74.021,
-          40.64563
+          -74.0210259632,
+          40.6456296249
         ]
       }
     }
