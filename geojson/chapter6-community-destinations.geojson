@@ -1,0 +1,63 @@
+{
+  "type": "FeatureCollection",
+  "name": "Chapter 6 — Businesses and community destinations",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "7-Eleven — 301 65th Street",
+        "kind": "convenience store",
+        "color": "#80564F",
+        "fillColor": "#B27668",
+        "radius": 8,
+        "weight": 2,
+        "fillOpacity": 0.9
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -74.02284,
+          40.63931
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Martin Luther Playground",
+        "kind": "playground / basketball courts",
+        "color": "#405B66",
+        "fillColor": "#668B91",
+        "radius": 9,
+        "weight": 2,
+        "fillOpacity": 0.9
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -74.01974,
+          40.64578
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Pier 4 — Brooklyn Army Terminal waterfront",
+        "kind": "waterfront / fishing",
+        "color": "#805E3F",
+        "fillColor": "#D0A36D",
+        "radius": 8,
+        "weight": 2,
+        "fillOpacity": 0.9
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -74.0277,
+          40.64753
+        ]
+      }
+    }
+  ]
+}
